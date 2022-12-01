@@ -308,3 +308,5 @@ Temporary Items
 .idea/hybrisProjectSettings.xml
 
 build/
+
+*.js
