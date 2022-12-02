@@ -11,4 +11,4 @@ export function add(numbers: string): number {
 }
 
 let result = add('1, 2, 4, 5');
-console.log(result);
+// console.log(result);
