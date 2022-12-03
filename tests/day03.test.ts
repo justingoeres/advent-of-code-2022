@@ -9,16 +9,16 @@ describe('Day 3: Rucksack Reorganization', () => {
         expect(day03Example.doPart1()).toBe(157);
     });
 
-    // test('Example Part 2: Total Score', () => {
-    //     expect(day03Example.doPart2()).toBe(12);
-    // });
+    test('Example Part 2: Total Score', () => {
+        expect(day03Example.doPart2()).toBe(70);
+    });
 
     test('Part 1: Total Priorities', () => {
         expect(day03.doPart1()).toBe(7763);
     });
 
-    // test('Part 2: Total Score', () => {
-    //     expect(day03.doPart2()).toBe(12989);
-    // });
+    test('Part 2: Total Score', () => {
+        expect(day03.doPart2()).toBe(2569);
+    });
 });
 
