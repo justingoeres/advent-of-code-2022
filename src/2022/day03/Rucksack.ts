@@ -9,4 +9,12 @@ export class Rucksack {
         this.comp2 = contents.substring(length / 2);
     }
 
+    findItemMatch(): string {
+        // Use comp1 as a regex to match against comp2
+        const regex: RegExp = new RegExp('[' + this.comp1 + ']');
+        const match: RegExpMatchArray = this.comp2.match(regex) as RegExpMatchArray;
+
+        // There will always be exactly one match
+        return match[0] as string;
+    }
 }

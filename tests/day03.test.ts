@@ -6,7 +6,7 @@ describe('Day 3: Rucksack Reorganization', () => {
     let day03Example: Day03 = new Day03('data/day03/example.txt');
 
     test('Example Part 1: Total Priorities', () => {
-        expect(day03Example.doPart1()).toBe(15);
+        expect(day03Example.doPart1()).toBe(157);
     });
 
     // test('Example Part 2: Total Score', () => {
@@ -14,7 +14,7 @@ describe('Day 3: Rucksack Reorganization', () => {
     // });
 
     test('Part 1: Total Priorities', () => {
-        expect(day03.doPart1()).toBe(15691);
+        expect(day03.doPart1()).toBe(7763);
     });
 
     // test('Part 2: Total Score', () => {

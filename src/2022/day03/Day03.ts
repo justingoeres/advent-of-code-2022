@@ -13,27 +13,15 @@ export class Day03 {
 
     doPart1(): number {
         /*
-            Find the Elf carrying the most Calories. How many total Calories is that Elf carrying?
+            Find the item type that appears in both compartments of each rucksack.
+            What is the sum of the priorities of those item types?
         */
-        let maxCalories = 0;
-        let elfCalories = 0;
 
-        const allElfCalories: number[] = [];
+        const totalScore = this.allRucksacks.map((rucksack: Rucksack): number =>
+            this.calculateScore(rucksack)
+        ).reduce((sum, current) => sum + current);
 
-        this.reader.lines.forEach(function (line) {
-            if (line.match(/^\d+/)) {
-                // This line is a number, add it up!
-                elfCalories += parseInt(line);
-            } else {
-                // This line is blank; compare this elf's total to the max
-                maxCalories = elfCalories > maxCalories ? elfCalories : maxCalories;
-                // And push it onto the array of all elves
-                allElfCalories.push(elfCalories);
-                elfCalories = 0;
-            }
-        });
-        // this.allElfCalories = allElfCalories;
-        return maxCalories;
+        return totalScore;
     }
 
     // doPart2(): number {
@@ -46,8 +34,18 @@ export class Day03 {
     // }
 
     parseInputPart1(): void {
-        this.reader.lines.map((line: string): Rucksack => {
+        this.allRucksacks = this.reader.lines.map((line: string): Rucksack => {
             return new Rucksack(line);
         });
+    }
+
+    calculateScore(rucksack: Rucksack): number {
+        /*
+            Lowercase item types a through z have priorities 1 through 26.
+            Uppercase item types A through Z have priorities 27 through 52.
+         */
+        const priorities: string = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        const score: number = priorities.search(rucksack.findItemMatch()) + 1;
+        return score;
     }
 }
