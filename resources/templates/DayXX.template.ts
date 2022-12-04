@@ -22,6 +22,7 @@ export class Day${AOC_DAY} {
         /*
             DESCRIPTION
         */
+        return 0;
     }
 
     parseInputPart1(): void {
