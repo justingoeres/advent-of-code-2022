@@ -2,8 +2,8 @@ import {Day05} from '../src/2022/day05/Day05';
 
 describe('Day 5: Supply Stacks', () => {
 
-    let day05: Day05 = new Day05('data/day05/input.txt', 8);
-    let day05Example: Day05 = new Day05('data/day05/example.txt', 3);
+    let day05: Day05 = new Day05('data/day05/input.txt');
+    let day05Example: Day05 = new Day05('data/day05/example.txt');
 
     test('Example Part 1: CrateMover 9000 Result', () => {
         expect(day05Example.doPart1()).toBe('CMZ');
