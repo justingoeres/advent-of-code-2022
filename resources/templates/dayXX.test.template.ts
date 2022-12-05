@@ -1,6 +1,6 @@
-import {Day${AOC_DAY}} from '../src/2022/day${AOC_DAY}/Day${AOC_DAY}';
+import {Day${AOC_DAY}} from '../src/${AOC_YEAR}/day${AOC_DAY}/Day${AOC_DAY}';
 
-describe('Day 3: NAME', () => {
+describe('Day ${AOC_PRETTY_DAY}: NAME', () => {
 
     let day${AOC_DAY}: Day${AOC_DAY} = new Day${AOC_DAY}('data/day${AOC_DAY}/input.txt');
     let day${AOC_DAY}Example: Day${AOC_DAY} = new Day${AOC_DAY}('data/day${AOC_DAY}/example.txt');
