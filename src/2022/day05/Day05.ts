@@ -12,7 +12,7 @@ export class Day05 {
         new Stack<string>());  // hardcode 9 stacks
     moves: Array<StackMove> = [];
 
-    constructor(inputFile: string, private count: number) {
+    constructor(inputFile: string) {
         this.reader = new LinesReader(inputFile);
     }
 
@@ -53,11 +53,18 @@ export class Day05 {
         return result;
     }
 
-    parseInput(count: number): void {
+    parseInput(): void {
         // build the stacks from the first 9 lines
         const stackRegex: RegExp = new RegExp(/(?:\[[A-Z]\]|(\s{3}))\s?/, 'g');
         const itemRegex: RegExp = new RegExp(/\[([A-Z])\]/);
         const lines: string[] = this.reader.lines;
+
+        // Count the number of levels in the starting stacks
+        let count: number = 0;
+        while (stackRegex.test(lines[count])) {
+            count++;
+        }
+        // Build our stacks
         for (const line of lines.splice(0, count).reverse()) {
             // Do them in reverse, from bottom to top
             let items = line.match(stackRegex) as RegExpMatchArray;
@@ -79,36 +86,29 @@ export class Day05 {
     }
 
     doMovePart1(move: StackMove): void {
-        for (let i = 0; i < move.howMany; i++) {
-            const item = this.stacks[move.from - 1].pop();
-            if (item) {
-                this.stacks[move.to - 1].push(item);
-            }
-        }
+        this.moveStacktoStack(move.howMany, this.stacks[move.from - 1], this.stacks[move.to - 1]);
     }
 
     doMovePart2(move: StackMove): void {
+        // To keep stack order intact, just move twice
         const tempStack: Stack<string> = new Stack<string>();
+        this.moveStacktoStack(move.howMany, this.stacks[move.from - 1], tempStack);
+        this.moveStacktoStack(move.howMany, tempStack, this.stacks[move.to - 1]);
+    }
 
-        for (let i = 0; i < move.howMany; i++) {
-            const item = this.stacks[move.from - 1].pop();
+    moveStacktoStack(howMany: number, from: Stack<string>, to: Stack<string>): void {
+        for (let i = 0; i < howMany; i++) {
+            const item = from.pop();
             if (item) {
-                tempStack.push(item);
+                to.push(item);
             }
         }
-        for (let i = 0; i < move.howMany; i++) {
-            const item = tempStack.pop();
-            if (item) {
-                this.stacks[move.to - 1].push(item);
-            }
-        }
-
     }
 
     reset(): void {
         this.reader.read();
         this.stacks.forEach((stack) => stack.clear());
         this.moves = [];
-        this.parseInput(this.count);
+        this.parseInput();
     }
 }
