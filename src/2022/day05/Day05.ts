@@ -18,7 +18,7 @@ export class Day05 {
 
     doPart1(): string {
         /*
-            After the rearrangement procedure completes,
+            After the CrateMover 9000 procedure completes,
             what crate ends up on top of each stack?
         */
         this.reset();
@@ -27,21 +27,33 @@ export class Day05 {
         this.moves.forEach((move) => this.doMovePart1(move));
 
         // Then get the results
-        const result: string = this.stacks.map((stack) => stack.pop())
-            .filter((item): item is string => !!item)
-            .reduce((current, next) => current.concat(next));
-
+        const result = this.getResults();
         return result;
     }
 
-    doPart2(): number {
-        /*
-            DESCRIPTION
-        */
-        return 0;
+    private getResults(): string {
+        const result: string = this.stacks.map((stack) => stack.pop())
+            .filter((item): item is string => !!item)
+            .reduce((current, next) => current.concat(next));
+        return result;
     }
 
-    parseInputPart1(count: number): void {
+    doPart2(): string {
+        /*
+            After the CrateMover 9001 procedure completes,
+            what crate ends up on top of each stack?
+        */
+        this.reset();
+
+        // execute the moves
+        this.moves.forEach((move) => this.doMovePart2(move));
+
+        // Then get the results
+        const result = this.getResults();
+        return result;
+    }
+
+    parseInput(count: number): void {
         // build the stacks from the first 9 lines
         const stackRegex: RegExp = new RegExp(/(?:\[[A-Z]\]|(\s{3}))\s?/, 'g');
         const itemRegex: RegExp = new RegExp(/\[([A-Z])\]/);
@@ -49,7 +61,6 @@ export class Day05 {
         for (const line of lines.splice(0, count).reverse()) {
             // Do them in reverse, from bottom to top
             let items = line.match(stackRegex) as RegExpMatchArray;
-
             for (const i in items) {
                 if (itemRegex.test(items[i])) {
                     // If this column is *not* blank
@@ -76,8 +87,28 @@ export class Day05 {
         }
     }
 
+    doMovePart2(move: StackMove): void {
+        const tempStack: Stack<string> = new Stack<string>();
+
+        for (let i = 0; i < move.howMany; i++) {
+            const item = this.stacks[move.from - 1].pop();
+            if (item) {
+                tempStack.push(item);
+            }
+        }
+        for (let i = 0; i < move.howMany; i++) {
+            const item = tempStack.pop();
+            if (item) {
+                this.stacks[move.to - 1].push(item);
+            }
+        }
+
+    }
+
     reset(): void {
         this.reader.read();
-        this.parseInputPart1(this.count);
+        this.stacks.forEach((stack) => stack.clear());
+        this.moves = [];
+        this.parseInput(this.count);
     }
 }
