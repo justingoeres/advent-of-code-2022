@@ -6,7 +6,7 @@ describe('Day 6: NAME', () => {
     let day06Example: Day06 = new Day06('data/day06/example.txt');
 
     test('Example Part 1: PART1_RESULT', () => {
-        expect(day06Example.doPart1()).toBe(0);
+        expect(day06Example.doPart1()).toBe(10);
     });
 
     test('Example Part 2: PART2_RESULT', () => {
@@ -14,7 +14,7 @@ describe('Day 6: NAME', () => {
     });
 
     test('Part 1: PART1_RESULT', () => {
-        expect(day06.doPart1()).toBe(0);
+        expect(day06.doPart1()).toBe(1198);
     });
 
     test('Part 2: PART2_RESULT', () => {
