@@ -1,5 +1,3 @@
-import {Ranges} from './Ranges';
-
 export class ElfRange {
     constructor(public min: number,
                 public max: number) {
@@ -24,5 +22,4 @@ export class ElfRange {
     containsValue(val: number): boolean {
         return (this.min <= val && val <= this.max);
     }
-
 }

@@ -1,4 +1,3 @@
-import {LinesReader} from './LinesReader';
 import {DataReader} from './DataReader';
 import fs from 'node:fs';
 

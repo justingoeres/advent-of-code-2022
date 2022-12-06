@@ -1,23 +1,19 @@
-import {LinesReader} from '../../common/reader/LinesReader';
-import {CsvFileReader} from '../../common/reader/CsvFileReader';
 import {Ranges} from './Ranges';
-import {ElfRange} from './ElfRange';
+import {InputReader} from '../../common/reader/InputReader';
 
 export class Day04 {
-    reader: LinesReader;
-    ranges: Ranges[] = [];
+    reader: InputReader<Ranges>;
 
     constructor(inputFile: string) {
-        this.reader = new LinesReader(inputFile);
+        this.reader = new InputReader<Ranges>(inputFile, new Day04Parser());
         this.reader.read();
-        this.parseInputPart1();
     }
 
     doPart1(): number {
         /*
             In how many assignment pairs does one range fully contain the other?
         */
-        const total: number = this.ranges
+        const total: number = this.reader.input
             .filter((element) => element.hasContainment())
             .length;
         return total;
@@ -27,16 +23,21 @@ export class Day04 {
         /*
             In how many assignment pairs do the ranges overlap?
         */
-        const total: number = this.ranges
+        const total: number = this.reader.input
             .filter((element) => element.hasOverlap())
             .length;
         return total;
     }
+}
 
-    parseInputPart1(): void {
-        this.ranges = this.reader.lines.map((line: string): any => {
-            return new Ranges(line);
-        });
+class Day04Parser implements AoCParser<Ranges> {
+    parseLine(line: string): Ranges {
+        // Pattern to match on each line
+        const regex: RegExp = new RegExp(/(\d+)-(\d+),(\d+)-(\d+)/);
+        // Do the match
+        const match = line.match(regex) as RegExpMatchArray;
+        // Create the result object from the match fields
+        return new Ranges(parseInt(match[1]), parseInt(match[2]),
+            parseInt(match[3]), parseInt(match[4]));
     }
-
 }

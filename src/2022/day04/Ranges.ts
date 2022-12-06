@@ -1,15 +1,12 @@
 import {ElfRange} from './ElfRange';
 
 export class Ranges {
+    private readonly elf1: ElfRange;
+    private readonly elf2: ElfRange;
 
-    private elf1: ElfRange;
-    private elf2: ElfRange;
-
-    constructor(line: string) {
-        const regex: RegExp = new RegExp(/(\d+)-(\d+),(\d+)-(\d+)/);
-        const match = line.match(regex) as RegExpMatchArray;
-        this.elf1 = new ElfRange(parseInt(match[1]), parseInt(match[2]));
-        this.elf2 = new ElfRange(parseInt(match[3]), parseInt(match[4]));
+    constructor(elf1Min: number, elf1Max: number, elf2Min: number, elf2Max: number) {
+        this.elf1 = new ElfRange(elf1Min, elf1Max);
+        this.elf2 = new ElfRange(elf2Min, elf2Max);
     }
 
     hasContainment(): boolean {
