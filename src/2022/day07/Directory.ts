@@ -1,5 +1,3 @@
-import {Dir} from 'fs';
-
 export class Directory {
     children?: Map<string, Directory>;
     files: Map<string, number> = new Map;

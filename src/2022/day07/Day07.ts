@@ -10,7 +10,7 @@ export class Day07 {
     constructor(inputFile: string) {
         this.reader = new LinesReader(inputFile);
         this.reader.read();
-        this.parseInputPart1();
+        this.parseInput();
     }
 
     doPart1(): number {
@@ -28,12 +28,30 @@ export class Day07 {
 
     doPart2(): number {
         /*
-            DESCRIPTION
+            The total disk space available to the filesystem is 70000000. To run the update, you need unused space of at least 30000000.
+            You need to find a directory you can delete that will free up enough space to run the update.
+
+            Find the smallest directory that, if deleted, would free up enough space on the filesystem to run the update.
+            What is the total size of that directory?
         */
-        return 0;
+        const totalSpace: number = 70000000;
+        const requiredSpace: number = 30000000;
+
+        // Find how much free space we have by looking at the size of the root.
+        const freeSpace: number = totalSpace - this.root.calculateTotalSize();
+        const additionalNeeded: number = requiredSpace - freeSpace;
+
+        // Now go through all the directories and find the SMALLEST one that is GREATER than additionalNeeded.
+        let smallestFound: number = Infinity;
+        this.allDirs.forEach((dir) => {
+            const dirTotalSize: number = dir.calculateTotalSize();
+            if (dirTotalSize >= additionalNeeded && dirTotalSize < smallestFound)
+                smallestFound = dirTotalSize;
+        });
+        return smallestFound;
     }
 
-    parseInputPart1(): void {
+    parseInput(): void {
         // Create the tree of Directories and their contents (children & files)
 
         // Regexes to match each thing.
