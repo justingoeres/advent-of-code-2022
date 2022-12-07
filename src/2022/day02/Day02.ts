@@ -1,6 +1,7 @@
 import {CsvFileReader} from '../../common/reader/CsvFileReader';
 import {RoundResult, RpsRound} from './RpsRound';
 import {ThrowEnum} from './ThrowEnum';
+import {sumReduce} from '../../common/Utils';
 
 export class Day02 {
     reader: CsvFileReader;
@@ -19,7 +20,7 @@ export class Day02 {
 
         return (this.allRounds.map((round: RpsRound): number => {
             return round.eval().p2points;
-        }).reduce((sum, current) => sum + current));
+        }).reduce(sumReduce));
     }
 
     doPart2(): number {
@@ -36,7 +37,7 @@ export class Day02 {
 
         return (this.allRounds.map((round: RpsRound): number => {
             return round.findP2Win().eval().p2points;
-        }).reduce((sum, current) => sum + current));
+        }).reduce(sumReduce));
     }
 
     parseInputPart1(): void {

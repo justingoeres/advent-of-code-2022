@@ -1,3 +1,5 @@
+import {sumReduce} from '../../common/Utils';
+
 export class Directory {
     children?: Map<string, Directory>;
     files: Map<string, number> = new Map;
@@ -25,7 +27,7 @@ export class Directory {
             // if this directory has children, calculate their sizes
             let childrenTotal: number = Array.from(this.children.values())
                 .map((dir) => dir.calculateTotalSize())
-                .reduce((total, current) => total + current, 0);
+                .reduce(sumReduce);
             return childrenTotal + this.size;
         } else {
             return this.size;

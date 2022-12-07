@@ -22,7 +22,7 @@ export class Day07 {
         // Go through all the directories and get their sizes, and add them up under the condition.
         const totalSize = this.allDirs.map((dir) => dir.calculateTotalSize())
             .filter((size) => size <= 100000)
-            .reduce(sumReduce, 0);
+            .reduce(sumReduce);
         return totalSize;
     }
 

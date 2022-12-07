@@ -1,5 +1,6 @@
 import {LinesReader} from '../../common/reader/LinesReader';
 import {Rucksack} from './Rucksack';
+import {sumReduce} from '../../common/Utils';
 
 export class Day03 {
     reader: LinesReader;
@@ -20,7 +21,7 @@ export class Day03 {
 
         const totalScore = this.allRucksacks.map((rucksack: Rucksack): number =>
             this.calculateScore(rucksack.findItemMatch())
-        ).reduce((sum, current) => sum + current);
+        ).reduce(sumReduce);
 
         return totalScore;
     }
