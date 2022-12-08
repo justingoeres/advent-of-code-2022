@@ -49,22 +49,70 @@ export class Day08 {
         /*
             What is the highest scenic score possible for any tree?
         */
-        // let skipCount = 0;
         let maxScore: number = 0;
+        // Check every tree row x column
         for (let rowIdx = 0; rowIdx < this.reader.input[0].length; rowIdx++) {
             for (let colIdx = 0; colIdx < this.reader.input[0].length; colIdx++) {
-                // horizontally
-                const row: Tree[] = this.reader.input[rowIdx];
-                const xScore: number = this.calculateScore1Axis(row, colIdx);
-                // vertically
-                const column: Tree[] = this.reader.input.map((row: Tree[]) => row[colIdx]);
-                const yScore: number = this.calculateScore1Axis(column, rowIdx);
-
-                const totalScore: number = xScore * yScore;
+                const totalScore = this.calculateScore(rowIdx, colIdx);
                 if (totalScore > maxScore) maxScore = totalScore;
             }
         }
         return maxScore;
+    }
+
+    doPart2Spiral(): number {
+        // start in the center
+        const forestSize = this.reader.input[0].length;
+        const forestXYMax = forestSize - 1;
+        const startXY: number = (forestSize - 1) / 2;
+
+        let maxScore: number = 0;
+        // move up and outward, doing a box at each step
+        for (let xy0 = startXY; xy0 >= 0; xy0--) {
+            let xyMax: number = forestXYMax - xy0;
+            // go across the top
+            for (let colIdx = xy0; colIdx <= xyMax; colIdx++) {
+                if (this.theoreticalMaxScore(colIdx, xy0, forestSize) > maxScore) {
+                    // horizontally
+                    const totalScore = this.calculateScore(colIdx, xy0);
+                    if (totalScore > maxScore) maxScore = totalScore;
+                }
+            }
+            // go across the bottom
+            for (let colIdx = xy0; colIdx <= xyMax; colIdx++) {
+                if (this.theoreticalMaxScore(colIdx, xyMax, forestSize) > maxScore) {
+                    const totalScore = this.calculateScore(xyMax, colIdx);
+                    if (totalScore > maxScore) maxScore = totalScore;
+                }
+            }
+            // go down the left
+            for (let rowIdx = xy0; rowIdx <= xyMax; rowIdx++) {
+                if (this.theoreticalMaxScore(xy0, rowIdx, forestSize) > maxScore) {
+                    const totalScore = this.calculateScore(rowIdx, xy0);
+                    if (totalScore > maxScore) maxScore = totalScore;
+                }
+            }
+            // go down the right
+            for (let rowIdx = xy0; rowIdx <= xyMax; rowIdx++) {
+                if (this.theoreticalMaxScore(rowIdx, xyMax, forestSize) > maxScore) {
+                    const totalScore = this.calculateScore(rowIdx, xyMax);
+                    if (totalScore > maxScore) maxScore = totalScore;
+                }
+            }
+        }
+        return maxScore;
+    }
+
+    private calculateScore(x: number, y: number) {
+        // horizontally
+        const row: Tree[] = this.reader.input[x];
+        const xScore: number = this.calculateScore1Axis(row, y);
+        // vertically
+        const column: Tree[] = this.reader.input.map((row: Tree[]) => row[y]);
+        const yScore: number = this.calculateScore1Axis(column, x);
+
+        const totalScore: number = xScore * yScore;
+        return totalScore;
     }
 
     calculateVisibilities(trees: Tree[]): void {
@@ -82,27 +130,36 @@ export class Day08 {
         }
     }
 
+    theoreticalMaxScore(x: number, y: number, size: number): number {
+        // Calculate the score for this x,y pair if it had full visibility in every direction
+        const x0: number = x;
+        const x1: number = (size - 1) - x;
+        const y0: number = y;
+        const y1: number = (size - 1) - y;
+
+        const maxScore = x0 * x1 * y0 * y1;
+        return maxScore;
+    }
+
     calculateScore1Axis(trees: Tree[], i: number) {
         // if it's on an edge, don't bother
         if (i == 0 || i == trees.length - 1) return 0;
 
         // otherwise, calculate
         const currentTree = trees[i];
-        // look "right"
+        // look "positive"
         let rightDistance = 0;
         for (let j = i + 1; j < trees.length; j++) {
             rightDistance++;
             if (trees[j].height >= currentTree.height) break;
         }
-        // look "left"
+        // look "negative"
         let leftDistance = 0;
         for (let j = i - 1; j >= 0; j--) {
             leftDistance++;
             if (trees[j].height >= currentTree.height) break;
         }
-
         return rightDistance * leftDistance;
-
     }
 
     printForest(forest: Tree[][]) {
