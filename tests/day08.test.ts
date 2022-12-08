@@ -9,16 +9,25 @@ describe('Day 8: Treetop Tree House', () => {
         expect(day08Example.doPart1()).toBe(21);
     });
 
-    test('Example Part 2: Highest Scenic Score', () => {
+    test('Example Part 2: Highest Scenic Score (Scan)', () => {
         expect(day08Example.doPart2()).toBe(8);
+    });
+
+    test('Example Part 2: Highest Scenic Score (Spiral)', () => {
+        expect(day08Example.doPart2Spiral()).toBe(8);
     });
 
     test('Part 1: Total Trees Visible', () => {
         expect(day08.doPart1()).toBe(1801);
     });
 
-    test('Part 2: Highest Scenic Score', () => {
+    test('Part 2: Highest Scenic Score (Scan)', () => {
         expect(day08.doPart2()).toBe(209880);
     });
+
+    test('Part 2: Highest Scenic Score (Spiral)', () => {
+        expect(day08.doPart2Spiral()).toBe(209880);
+    });
+
 });
 
