@@ -33,7 +33,7 @@ export class XYPoint {
     }
 
     hashCode(): number {
-
+        // WIP: This is not a good hash code.
         // return (this.x + this.y) * (this.x + this.y + 1)/2;
         return (this.x << 8) + this.y;
     }

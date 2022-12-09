@@ -2,16 +2,14 @@ import {RopeMove} from './RopeMove';
 import {URDL, XYPoint} from '../../common/Directions';
 import {InputReader} from '../../common/reader/InputReader';
 import {Rope} from './Rope';
-import {HashSet} from '../../common/SetUtils';
+import {LongRope} from './LongRope';
 
 export class Day09 {
     reader: InputReader<RopeMove>;
-    input: any;
 
     constructor(inputFile: string) {
         this.reader = new InputReader<RopeMove>(inputFile, new Day09Parser());
         this.reader.read();
-        // this.parseInputPart1();
     }
 
     doPart1(): number {
@@ -35,17 +33,22 @@ export class Day09 {
 
     doPart2(): number {
         /*
-            DESCRIPTION
+            Simulate your complete series of motions on a larger rope with ten knots.
+            How many positions does the tail of the rope visit at least once?
         */
-        return 0;
+        const longRope: LongRope = new LongRope();
+        const tailVisited: Set<string> = new Set<string>();
+
+        this.reader.input.forEach((move) => {
+            // move the rope (& the tail)
+            for (let i = 0; i < move.distance; i++) {
+                longRope.doMove(move);
+                // update the list of places the tail has been
+                tailVisited.add(JSON.stringify(longRope.tail));
+            }
+        });
+        return tailVisited.size;
     }
-
-    // parseInputPart1(): void {
-    //     this.input = this.reader.input.map((line: string): any => {
-    //         return 'something';
-    //     });
-    // }
-
 }
 
 class Day09Parser implements AoCParser<RopeMove> {
