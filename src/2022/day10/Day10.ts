@@ -1,21 +1,28 @@
 import {LinesReader} from '../../common/reader/LinesReader';
+import {Op, OpCode, OpCodeEnum} from './Op';
+import {InputReader} from '../../common/reader/InputReader';
+import {CPU} from './CPU';
+import {sumReduce} from '../../common/Utils';
 
 export class Day10 {
-    reader: LinesReader;
+    reader: InputReader<Op>;
     input: any;
+    cpu: CPU = new CPU;
 
     constructor(inputFile: string) {
-        this.reader = new LinesReader(inputFile);
+        this.reader = new InputReader<Op>(inputFile, new Day10Parser());
         this.reader.read();
-        this.parseInputPart1();
     }
 
     doPart1(): number {
         /*
-            DESCRIPTION
+            Find the signal strength during the 20th, 60th, 100th, 140th, 180th, and 220th cycles.
+            What is the sum of these six signal strengths?
         */
-
-        return 0;
+        this.reader.input.forEach((op: Op, i: number) => {
+            this.cpu.execute(op);
+        });
+        return this.cpu.samples.reduce(sumReduce);
     }
 
     doPart2(): number {
@@ -24,11 +31,16 @@ export class Day10 {
         */
         return 0;
     }
+}
 
-    parseInputPart1(): void {
-        this.input = this.reader.lines.map((line: string): any => {
-            return 'something';
-        });
+class Day10Parser implements AoCParser<Op> {
+    parseLine(line: string): Op {
+        // Pattern to match on each line
+        const regex: RegExp = new RegExp(/(\w+)(?:\s(-?\d+))?/);
+        // Do the match
+        const matches = (line.match(regex) as RegExpMatchArray);
+        // Create an array of Ops from each line of input
+        console.log(line);
+        return new Op(matches[1] as unknown as OpCodeEnum, parseInt(matches[2]));
     }
-
 }
