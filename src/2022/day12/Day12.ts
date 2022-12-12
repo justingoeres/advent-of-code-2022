@@ -33,7 +33,6 @@ export class Day12 {
         while (!found) {
             // go until we're done
             // for each of the 'active' points we're evaluating
-            let debug: string = '*** Step: ' + stepCount + '\n';
             for (const mtnPoint of activePoints) {
                 // mark this point visited
                 const currentHeight = mtnPoint.height;
@@ -48,19 +47,14 @@ export class Day12 {
                             && neighborMtnPoint
                             && neighborMtnPoint.height <= (currentHeight + 1);
                     });
-                debug += mtnPoint.toString();
                 // schedule them all for the next step
                 unvisited.forEach((xy: XYPoint) => {
                     const nextMtnPoint = this.mountain.get(xy.keyString()) as MtnPoint;
-                    if (nextMtnPoint.height == (this.mountain.get(this.endKeyString) as MtnPoint).height) {
-                        debug += '****************** WE FOUND IT ******************\n';
+                    if (nextMtnPoint.keyString() == this.endKeyString) {
                         found = true;
                     }
-                    debug += '\t' + nextMtnPoint.toString();
                     nextActivePoints.add(nextMtnPoint);
                 });
-                console.log(debug + 'Found is ' + found + '\n');
-                debug = '';
             }
             // update the step counter
             stepCount++;
@@ -76,11 +70,54 @@ export class Day12 {
 
     doPart2(): number {
         /*
-            DESCRIPTION
+            What is the fewest steps required to move starting from any square with elevation a to the location that should get the best signal?
         */
-        return 0;
-    }
+        // This is equivalent to finding the fastest way *down* from the top.
+        const visitedPoints: Map<string, number> = new Map;
+        let activePoints: Set<MtnPoint> = new Set;
+        let nextActivePoints: Set<MtnPoint> = new Set;
+        let stepCount: number = 0;
 
+        // start at the end!
+        activePoints.add(this.end);
+        let found: boolean = false;
+        while (!found) {
+            // go until we're done
+            // for each of the 'active' points we're evaluating
+            for (const mtnPoint of activePoints) {
+                // mark this point visited
+                const currentHeight = mtnPoint.height;
+                visitedPoints.set(mtnPoint.keyString(), stepCount);
+                // get all its (unvisited) neighbors
+                const unvisited: XYPoint[] = mtnPoint.xy.getAllNeighbors()
+                    .filter((xy: XYPoint) => {
+                        const neighbor = xy;
+                        const neighborKey = neighbor.keyString();
+                        const neighborMtnPoint = this.mountain.get(neighborKey) as MtnPoint;
+                        return !visitedPoints.has(neighborKey)
+                            && neighborMtnPoint
+                            && neighborMtnPoint.height >= (currentHeight - 1);
+                    });
+                // schedule them all for the next step
+                unvisited.forEach((xy: XYPoint) => {
+                    const nextMtnPoint = this.mountain.get(xy.keyString()) as MtnPoint;
+                    if (nextMtnPoint.height == 0) { // 'a' height is 0
+                        found = true;
+                    }
+                    nextActivePoints.add(nextMtnPoint);
+                });
+            }
+            // update the step counter
+            stepCount++;
+            // swap the 'active' & 'nextActive'
+            const temp = activePoints;
+            activePoints = nextActivePoints;
+            nextActivePoints = temp;
+            nextActivePoints.clear();
+        }
+        // Now that we've got the path, print it out going backwards to the Start
+        return stepCount;
+    }
 
     parseInputPart1(): void {
         this.reader.lines.forEach((line: string, j) => line.split('').forEach((char: string, i) => {
