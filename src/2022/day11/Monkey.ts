@@ -1,7 +1,7 @@
 export class Monkey {
-    items: number[] = [];
-    operation!: ((old: number) => number);
-    test: number = 0;
+    items: bigint[] = [];
+    operation!: ((old: bigint) => bigint);
+    test: bigint = 0n;
     trueTarget: number = 0;
     falseTarget: number = 0;
     inspectionCount: number = 0;
@@ -9,31 +9,31 @@ export class Monkey {
     constructor() {
     }
 
-    static createAddOp(opArg: number) {
-        return (old: number) => {
+    static createAddOp(opArg: bigint) {
+        return (old: bigint) => {
             return old + opArg;
         };
     }
 
-    static createMultiplyOp(opArg: number) {
-        return (old: number) => {
+    static createMultiplyOp(opArg: bigint) {
+        return (old: bigint) => {
             return old * opArg;
         };
     }
 
     static createSquaredOp() {
-        return (old: number) => {
+        return (old: bigint) => {
             return old * old;
         };
     }
 
     public addItems(itemsString: string): void {
         // e.g. '61, 81, 84, 69, 77, 88'
-        itemsString.split(/,\s/).map((item: string) => parseInt(item))
-            .forEach((item: number) => this.addItem(item));
+        itemsString.split(/,\s/).map((item: string) => BigInt(parseInt(item)))
+            .forEach((item: bigint) => this.addItem(item));
     }
 
-    public addItem(item: number): void {
+    public addItem(item: bigint): void {
         this.items.push(item);
     }
 }

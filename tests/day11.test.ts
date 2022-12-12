@@ -10,7 +10,7 @@ describe('Day 11: Monkey in the Middle', () => {
     });
 
     test('Example Part 2: PART2_RESULT', () => {
-        expect(day11Example.doPart2()).toBe(0);
+        expect(day11Example.doPart2()).toBe(2713310158);
     });
 
     test('Part 1: Monkey Business after 20 rounds', () => {

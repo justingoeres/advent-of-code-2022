@@ -9,7 +9,7 @@ export class Day11 {
     constructor(inputFile: string) {
         this.reader = new LinesReader(inputFile);
         this.reader.read();
-        this.parseInputPart1();
+        this.parseInput();
     }
 
     doPart1(): number {
@@ -21,7 +21,7 @@ export class Day11 {
             this.doRound();
         }
         // calculate the two highest monkey businesses & return the answer
-        const result:number = this.monkeys.map((monkey) => monkey.inspectionCount)
+        const result: number = this.monkeys.map((monkey) => monkey.inspectionCount)
             .sort((n1, n2) => n2 - n1)
             .splice(0, 2).reduce(multiplyReduce);
         return result;
@@ -29,33 +29,75 @@ export class Day11 {
 
     doPart2(): number {
         /*
-            DESCRIPTION
+            Worry levels are no longer divided by three after each item is inspected;
+            you'll need to find another way to keep your worry levels manageable.
+            Starting again from the initial state in your puzzle input, what is the level
+            of monkey business after 10000 rounds?
         */
-        return 0;
+        // Clear out the monkeys and (re-)parse the input
+        this.monkeys = [];
+        this.parseInput();
+        const printRounds: Set<number> = new Set([1, 20, 1000, 2000, 3000, 4000, 5000]);
+        for (let round = 0; round < 10000; round++) {
+            this.doRound(false);
+            // let output: String = '== After round ' + (round + 1) + ' ==\n';
+            // const stats: string[] = this.monkeys.map((monkey, i) => 'Monkey' + i + ' has items: ' + monkey.items);
+            // console.log(output.concat(stats.join('\n')));
+
+            if (printRounds.has(round + 1)) {
+                let output: String = '== After round ' + (round + 1) + ' ==\n';
+                const stats: string[] = this.monkeys.map((monkey, i) => 'Monkey' + i + ' inspected items ' + monkey.inspectionCount + ' times.');
+                console.log(output.concat(stats.join('\n')));
+            }
+        }
+        // calculate the two highest monkey businesses & return the answer
+        const result: number = this.monkeys.map((monkey) => monkey.inspectionCount)
+            .sort((n1, n2) => n2 - n1)
+            .splice(0, 2).reduce(multiplyReduce);
+        return result;
     }
 
-    doRound(): void {
+    doRound(reduceWorry: boolean = true): void {
         // go through the monkeys in order
         // for each monkey
         for (const monkey of this.monkeys) {
-            let item;
+            let item: bigint;
             // for each held item
-            while (item = monkey.items.shift()) {
+            while (item = monkey.items.shift() as bigint) {
                 // inspect (do operation)
                 item = monkey.operation(item);
                 monkey.inspectionCount++;
-                // boredom (divide worry by three)
-                item = Math.floor(item / 3);
+                if (reduceWorry) { // boredom (divide by 3)
+                    item = BigInt(Math.floor(Number(item) / 3));
+                }
                 // do test
-                let target: number = (item % monkey.test == 0) ? monkey.trueTarget : monkey.falseTarget;
+                let target: number = (!(item % monkey.test)) ? monkey.trueTarget : monkey.falseTarget;
                 // throw based on test result
-                this.monkeys[target].addItem(item);
+                this.monkeys[target].addItem(item as bigint);
             }
         }
     }
 
+    // doRoundPart2(): void {
+    //     // go through the monkeys in order
+    //     // for each monkey
+    //     for (const monkey of this.monkeys) {
+    //         let item;
+    //         // for each held item
+    //         while (item = monkey.items.shift()) {
+    //             // inspect (do operation)
+    //             item = monkey.operation(item);
+    //             monkey.inspectionCount++;
+    //             item = Math.floor(item / 3);
+    //             // do test
+    //             let target: number = (item % monkey.test == 0) ? monkey.trueTarget : monkey.falseTarget;
+    //             // throw based on test result
+    //             this.monkeys[target].addItem(item);
+    //         }
+    //     }
+    // }
 
-    parseInputPart1(): void {
+    parseInput(): void {
         /*
                 Monkey 0:
                 Starting items: 73, 77
@@ -85,17 +127,17 @@ export class Day11 {
                 const match = line.match(operationRegex) as RegExpMatchArray;
                 switch (match[1]) {
                     case '+':
-                        monkey.operation = Monkey.createAddOp(parseInt(match[2]));
+                        monkey.operation = Monkey.createAddOp(BigInt(parseInt(match[2])));
                         break;
                     case '*':
                         monkey.operation = (match[2] == 'old')
                             ? Monkey.createSquaredOp()
-                            : Monkey.createMultiplyOp(parseInt(match[2]));
+                            : Monkey.createMultiplyOp(BigInt(parseInt(match[2])));
                         break;
                 }
             } else if (testRegex.test(line)) {
                 const match = line.match(testRegex) as RegExpMatchArray;
-                monkey.test = parseInt(match[1]);
+                monkey.test = BigInt(parseInt(match[1]));
             } else if (throwRegex.test(line)) {
                 const match = line.match(throwRegex) as RegExpMatchArray;
                 const target = parseInt(match[2]);
