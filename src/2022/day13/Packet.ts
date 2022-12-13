@@ -108,16 +108,21 @@ export function comparePackets(packet1: packet, packet2: packet): boolean {
 //           If the left integer is lower than the right integer, the inputs are in the right order.
             if (left < right) return true;
 //           If the left integer is higher than the right integer, the inputs are not in the right order.
-            if (right > left) return false;
+            if (left > right) {
+                return false;
+            }
 //           Otherwise, the inputs are the same integer; continue checking the next part of the input.
-        } else if (typeof left == 'object' && typeof right == 'object') {
+        }
+        // if the right side has run out of items, inputs are NOT in the right order
+        else if (typeof right == 'undefined') return false;
+        else if (typeof left == 'object' && typeof right == 'object') {
             // If both values are lists, compare the first value of each list, then the second value, and so on.
             // If the left list runs out of items first, the inputs are in the right order.
-            if (left.length < right.length) return true;
+            // if (left.length < right.length) return true;
             // If the right list runs out of items first, the inputs are not in the right order.
-            if (left.length > right.length) return false;
+            // if (left.length > right.length) return false;
             // If the lists are the same length and no comparison makes a decision about the order, continue checking the next part of the input.
-            // If the comparison fails, return a failed compare. Otherwise keep going.
+            // If the comparison fails, return a failed compare. Otherwise, keep going.
             // if (!comparePackets(left, right)) return false;
             result = comparePackets(left, right);
         } else {

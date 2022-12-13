@@ -24,11 +24,14 @@ export class Day13 {
         //
         // }
 
-        for (const pair of this.pairs) {
-            console.log(pair);
-            console.log('RESULT:\t' + pair.evaluate());
+        let total: number = 0;
+        for (const i in this.pairs) {
+            console.log(this.pairs[i]);
+            const result: boolean = this.pairs[i].evaluate();
+            if (result) total += parseInt(i) + 1;
+            console.log('RESULT:\t' + result);
         }
-        return 0;
+        return total;
     }
 
     evaluatePair(packet1: string, packet2: string): boolean {
