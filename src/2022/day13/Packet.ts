@@ -54,6 +54,8 @@ export function parsePacket(text: string): packet {
     return contents;
 }
 
+type closingBracketInfo = { packet: string, endIndex: number }
+
 function findClosingBracket(text: string): closingBracketInfo {
     //  [1],[2,3,4] returns [1]
     //  [2,[3,[4,[5,6,7]]]],8,9] returns [2,[3,[4,[5,6,7]]]],8,9]
@@ -73,4 +75,69 @@ function findClosingBracket(text: string): closingBracketInfo {
     return {packet: bracketText, endIndex: endIndex};
 }
 
-type closingBracketInfo = { packet: string, endIndex: number }
+export function comparePackets(packet1: packet, packet2: packet): boolean {
+    /*
+       === RULES ===
+       When comparing two values, the first value is called left and the second value is called right. Then:
+           If both values are integers, the lower integer should come first. If the left integer is lower than the right integer,
+               the inputs are in the right order. If the left integer is higher than the right integer, the inputs are not in the right order.
+               Otherwise, the inputs are the same integer; continue checking the next part of the input.
+
+           If both values are lists, compare the first value of each list, then the second value, and so on. If the left list runs out of items first,
+               the inputs are in the right order. If the right list runs out of items first, the inputs are not in the right order.
+
+           If the lists are the same length and no comparison makes a decision about the order, continue checking the next part of the input.
+
+           If exactly one value is an integer, convert the integer to a list which contains that integer as its only value, then retry the comparison.
+               For example, if comparing [0,0,0] and 2, convert the right value to [2] (a list containing 2); the result is then found by instead comparing [0,0,0] and [2].
+   */
+    /* Examples:
+        [1,1,3,1,1]
+        [1,1,5,1,1]
+
+        [[1],[2,3,4]]
+        [[1],4]
+     */
+    let result: boolean = true;
+    for (const i in packet1) {
+        const left = packet1[i];
+        const right = packet2[i];
+        console.log('Comparing...\n' + typeof left + ': ' + left + '\n' + typeof right + ': ' + right);
+        if (typeof left == 'number' && typeof right == 'number') {
+//           If both values are integers, the lower integer should come first.
+//           If the left integer is lower than the right integer, the inputs are in the right order.
+            if (left < right) return true;
+//           If the left integer is higher than the right integer, the inputs are not in the right order.
+            if (right > left) return false;
+//           Otherwise, the inputs are the same integer; continue checking the next part of the input.
+        } else if (typeof left == 'object' && typeof right == 'object') {
+            // If both values are lists, compare the first value of each list, then the second value, and so on.
+            // If the left list runs out of items first, the inputs are in the right order.
+            if (left.length < right.length) return true;
+            // If the right list runs out of items first, the inputs are not in the right order.
+            if (left.length > right.length) return false;
+            // If the lists are the same length and no comparison makes a decision about the order, continue checking the next part of the input.
+            // If the comparison fails, return a failed compare. Otherwise keep going.
+            // if (!comparePackets(left, right)) return false;
+            result = comparePackets(left, right);
+        } else {
+            // If exactly one value is an integer, convert the integer to a list
+            // which contains that integer as its only value, then retry the comparison.
+            if (typeof left == 'number') {
+                // convert left to an array
+                if (!comparePackets(Array.of(left), right as packet)) return false;
+            } else {
+                // convert right to an array
+                if (!comparePackets(left as packet, Array.of(right))) return false;
+            }
+        }
+        if (result == false) return false;
+    }
+
+    return result;
+}
+
+function isNumber(packet: packet | number): boolean {
+    // does this
+    return (typeof packet === 'number');
+}

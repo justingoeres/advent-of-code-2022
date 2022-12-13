@@ -24,6 +24,10 @@ export class Day13 {
         //
         // }
 
+        for (const pair of this.pairs) {
+            console.log(pair);
+            console.log('RESULT:\t' + pair.evaluate());
+        }
         return 0;
     }
 

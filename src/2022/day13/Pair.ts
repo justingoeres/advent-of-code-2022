@@ -1,3 +1,5 @@
+import {comparePackets, packet} from './Packet';
+
 export class Pair {
     constructor(public packet1: packet, public packet2: packet) {
     }
@@ -30,41 +32,10 @@ export class Pair {
             [[1],4]
          */
 
-        // to parse a packet
-        // packets are always wrapped in []
-        // unwrap the surrounding []
-        // this will leave an array of numbers & packets that we need to decode
-        // iterate over the array
-        // for numbers, simply store them
-        // packets will be again surrounded by []
-        // so when we find a [, unwrap to the containing ]
-        // and recurse into it.
-        // So when we're done, a packet is an ARRAY of 'number | packet'
+        // every one of our pairs' top-level packets is actually a 1-element array
+        const packet1eval: packet = this.packet1[0] as packet;
+        const packet2eval: packet = this.packet2[0] as packet;
 
-
-
-        return false;
+        return comparePackets(this.packet1, this.packet2);
     }
-
 }
-
-type packet = (number | packet)[];
-
-/*
- a packet is
-    //  [1,1,5,1,1]         packet
-    //      1,1,5,1,1       number, number, number, number, number  (numbers)
-
-    //  [[1],[2,3,4]]       packet
-    //      [1],[2,3,4]     packet, packet                          (packets)
-    //          [1]         number                                  (numbers)
-    //          [2,3,4]     number, number, number                  (numbers)
-
-    //  [[8,7,6]]           packet
-    //      [8,7,6]         packet                                  (packets)
-    //          [8,7,6]     number, number, number                  (numbers)
-
-    //  [[[]]]              packet                                  (packets)
-    //      [[]]            packet                                  (packets)
-    //          []          number? (empty?)                        (numbers?)
- */
