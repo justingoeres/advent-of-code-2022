@@ -1,33 +1,12 @@
-import {LinesReader} from '../../common/reader/LinesReader';
-import {parsePacket} from './Packet';
-import {Pair} from './Pair';
-
-export class Day13 {
-    reader: LinesReader;
-    pairs: Pair[] = [];
-
-    constructor(inputFile: string) {
-        this.reader = new LinesReader(inputFile);
-        this.reader.read();
-        this.parseInput();
+export class Pair {
+    constructor(public packet1: packet, public packet2: packet) {
     }
 
-    doPart1(): number {
-        /*
-            Determine which pairs of packets are already in the right order. What is the sum of the indices of those pairs?
-        */
-        // for (const pair of pairs) {
-        //     // the character index we're looking at in each packet
-        //     let i1: number = 0;
-        //     let i2: number = 0;
-        //
-        //
-        // }
+// example packets:
+    //     [1,1,5,1,1]
+    //     [[1],[2,3,4]]
 
-        return 0;
-    }
-
-    evaluatePair(packet1: string, packet2: string): boolean {
+    public evaluate(): boolean {
         /*
             === RULES ===
             When comparing two values, the first value is called left and the second value is called right. Then:
@@ -62,39 +41,30 @@ export class Day13 {
         // and recurse into it.
         // So when we're done, a packet is an ARRAY of 'number | packet'
 
-        // figure out is each packet an array or a scalar?
-        const intRegex: RegExp = /(^\d+)/;
-        const packet1isScalar = intRegex.test(packet1);
-        const packet2isScalar = intRegex.test(packet2);
-
-        // If both values are integers, the lower integer should come first.
-        if (packet1isScalar && packet2isScalar) {
-            const int1 = parseInt((packet1.match(intRegex) as RegExpMatchArray)[1]);
-            const int2 = parseInt((packet2.match(intRegex) as RegExpMatchArray)[2]);
-            return (int1 > int2);
-        }
-
-        // If both values are lists, compare the first value of each list, then the second value, and so on.
-        if (!packet1isScalar && !packet2isScalar) {
-            //
-        }
 
 
         return false;
     }
 
-    doPart2(): number {
-        /*
-            DESCRIPTION
-        */
-        return 0;
-    }
-
-    parseInput(): void {
-        while (this.reader.lines.length > 0) {
-            const set: string[] = this.reader.lines.splice(0, 3);   // both 'pair' lines and the blank line separator line
-            this.pairs.push(new Pair(parsePacket(set[0]), parsePacket(set[1])));
-        }
-    }
-
 }
+
+type packet = (number | packet)[];
+
+/*
+ a packet is
+    //  [1,1,5,1,1]         packet
+    //      1,1,5,1,1       number, number, number, number, number  (numbers)
+
+    //  [[1],[2,3,4]]       packet
+    //      [1],[2,3,4]     packet, packet                          (packets)
+    //          [1]         number                                  (numbers)
+    //          [2,3,4]     number, number, number                  (numbers)
+
+    //  [[8,7,6]]           packet
+    //      [8,7,6]         packet                                  (packets)
+    //          [8,7,6]     number, number, number                  (numbers)
+
+    //  [[[]]]              packet                                  (packets)
+    //      [[]]            packet                                  (packets)
+    //          []          number? (empty?)                        (numbers?)
+ */
