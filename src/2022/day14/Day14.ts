@@ -27,16 +27,28 @@ export class Day14 {
         */
         while (this.generate1Sand()) ;
         // print when done
-        this.printCave();
+        // this.printCave();
 
         return this.sand.size;
     }
 
     doPart2(): number {
         /*
-            DESCRIPTION
+            Add an infinite floor at y = yMax + 2.
+            Simulate the falling sand until the source of the sand becomes blocked. How many units of sand come to rest?
         */
-        return 0;
+
+        // Since the y-height of everything is 200, the sand can only spread about 200 to the left & right of the origin
+        // So make our floor from 250 to 750 and that's wide enough
+        const x0: XYPoint = new XYPoint(500 - (this.yMax + 20), this.yMax + 2);
+        const x1: XYPoint = new XYPoint(500 + (this.yMax + 20), this.yMax + 2);
+        this.makeWall(x0, x1).forEach((xy) => this.rocks.add(xy));
+        while (this.generate1Sand()) ;
+        // print when done
+        // this.printCave();
+
+        return this.sand.size;
+
     }
 
     generate1Sand(): boolean {
@@ -73,23 +85,23 @@ export class Day14 {
             }
             // Check to see if the sand is falling into the abyss.
             // Is its x-coordinate outside the boundary, or its y-coordinate greater than our max?
-            // if (!(sand.x >= this.xMin
-            //     && sand.x <= this.xMax
-            //     && sand.y <= this.yMax)) {
-            if (!(sand.x >= 0
-                && sand.x <= 600
-                && sand.y <= 200)) {
+            if (!(sand.x >= this.xMin
+                && sand.x <= this.xMax
+                && sand.y <= this.yMax)) {
                 // out of bounds, stop & return
-                console.log('*** Sand falls into the abyss at ' + sand.toString());
                 return false;
             }
         }
         // once we're blocked, stop moving and place the sand
         this.sand.add(sand.keyString());
 
+        // If we hit the origin, stop
+        if (sand.keyString() == XYPoint.keyOf(500, 0)) return false;
+
         // if (this.sand.size % 100 == 0) {
         //     this.printCave();
         // }
+
         // since this sand stopped, keep adding more!
         return true;
     }
@@ -113,7 +125,7 @@ export class Day14 {
                 this.makeWall(xy1, xy2).forEach((xyKey: string) => this.rocks.add(xyKey));
             }
         });
-        this.printCave();
+        // this.printCave();
     }
 
     makeWall(xy1: XYPoint, xy2: XYPoint): Set<string> {
@@ -139,6 +151,7 @@ export class Day14 {
             }
             if (wallXMax > this.xMax) this.xMax = wallXMax;
             if (wallXMin < this.xMin) this.xMin = wallXMin;
+            if (y0 > this.yMax) this.yMax = y0;
         }
         return wallXYs;
     }
