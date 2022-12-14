@@ -75,7 +75,7 @@ function findClosingBracket(text: string): closingBracketInfo {
     return {packet: bracketText, endIndex: endIndex};
 }
 
-export function comparePackets(packet1: packet, packet2: packet): boolean {
+export function comparePackets(packet1: packet, packet2: packet): boolean | undefined {
     /*
        === RULES ===
        When comparing two values, the first value is called left and the second value is called right. Then:
@@ -98,7 +98,7 @@ export function comparePackets(packet1: packet, packet2: packet): boolean {
         [[1],[2,3,4]]
         [[1],4]
      */
-    let result: boolean = true;
+    let result: boolean | undefined = undefined;
     for (const i in packet1) {
         const left = packet1[i];
         const right = packet2[i];
@@ -106,40 +106,41 @@ export function comparePackets(packet1: packet, packet2: packet): boolean {
         if (typeof left == 'number' && typeof right == 'number') {
 //           If both values are integers, the lower integer should come first.
 //           If the left integer is lower than the right integer, the inputs are in the right order.
-            if (left < right) return true;
+            if (left < right) result = true;
 //           If the left integer is higher than the right integer, the inputs are not in the right order.
             if (left > right) {
-                return false;
+                result = false;
             }
 //           Otherwise, the inputs are the same integer; continue checking the next part of the input.
-        }
-        // if the right side has run out of items, inputs are NOT in the right order
-        else if (typeof right == 'undefined') return false;
-        else if (typeof left == 'object' && typeof right == 'object') {
+        } else if (typeof left == 'object' && typeof right == 'object') {
             // If both values are lists, compare the first value of each list, then the second value, and so on.
             // If the left list runs out of items first, the inputs are in the right order.
-            // if (left.length < right.length) return true;
             // If the right list runs out of items first, the inputs are not in the right order.
-            // if (left.length > right.length) return false;
             // If the lists are the same length and no comparison makes a decision about the order, continue checking the next part of the input.
             // If the comparison fails, return a failed compare. Otherwise, keep going.
             // if (!comparePackets(left, right)) return false;
             result = comparePackets(left, right);
-        } else {
+        } else if (typeof left == 'number' || typeof right == 'number') {
             // If exactly one value is an integer, convert the integer to a list
             // which contains that integer as its only value, then retry the comparison.
             if (typeof left == 'number') {
                 // convert left to an array
-                if (!comparePackets(Array.of(left), right as packet)) return false;
+                // if (!comparePackets(Array.of(left), right as packet)) return false;
+                result = comparePackets(Array.of(left), right as packet);
             } else {
                 // convert right to an array
-                if (!comparePackets(left as packet, Array.of(right))) return false;
+                // if (!comparePackets(left as packet, Array.of(right))) return false;
+                result = comparePackets(left as packet, Array.of(right));
             }
+            // if the right side has run out of items, inputs are NOT in the right order
+        } else if (typeof right == 'undefined' && (left as packet).length > 0) {
+            result = false;
         }
-        if (result == false) return false;
+        // If we figured anything out, return the result
+        if (typeof result == 'boolean') return result;
     }
-
-    return result;
+    // left side ran out of items
+    return true;
 }
 
 function isNumber(packet: packet | number): boolean {

@@ -36,6 +36,6 @@ export class Pair {
         const packet1eval: packet = this.packet1[0] as packet;
         const packet2eval: packet = this.packet2[0] as packet;
 
-        return comparePackets(this.packet1, this.packet2);
+        return comparePackets(this.packet1, this.packet2) as boolean;
     }
 }

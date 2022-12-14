@@ -26,10 +26,13 @@ export class Day13 {
 
         let total: number = 0;
         for (const i in this.pairs) {
-            console.log(this.pairs[i]);
+            console.log('**** PAIR # ' + (parseInt(i) + 1) + ' ****\n' + this.pairs[i]);
             const result: boolean = this.pairs[i].evaluate();
             if (result) total += parseInt(i) + 1;
             console.log('RESULT:\t' + result);
+            if (!result) {
+                console.log('break here');
+            }
         }
         return total;
     }
