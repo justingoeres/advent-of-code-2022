@@ -15,12 +15,7 @@ describe('Day 13: Distress Signal', () => {
     let day13: Day13 = new Day13('data/day13/input.txt');
 
     test('Part 1: Sum of correctly-ordered pair indexes', () => {
-        // there are 150 pairs in the input
-        // 614 too low
-        // 4349 too low (wrong input)
-        // 4627 too low
-        // 6473 wrong
-        expect(day13.doPart1()).toBe(0);
+        expect(day13.doPart1()).toBe(6272);
     });
 
     // test('Part 2: PART2_RESULT', () => {
