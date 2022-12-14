@@ -8,9 +8,9 @@ describe('Day 13: Distress Signal', () => {
         expect(day13Example.doPart1()).toBe(13);
     });
 
-    // test('Example Part 2: PART2_RESULT', () => {
-    //     expect(day13Example.doPart2()).toBe(0);
-    // });
+    test('Example Part 2: Decoder key', () => {
+        expect(day13Example.doPart2()).toBe(140);
+    });
 
     let day13: Day13 = new Day13('data/day13/input.txt');
 
@@ -18,8 +18,8 @@ describe('Day 13: Distress Signal', () => {
         expect(day13.doPart1()).toBe(6272);
     });
 
-    // test('Part 2: PART2_RESULT', () => {
-    //     expect(day13.doPart2()).toBe(0);
-    // });
+    test('Part 2: Decoder key', () => {
+        expect(day13.doPart2()).toBe(22288);
+    });
 });
 

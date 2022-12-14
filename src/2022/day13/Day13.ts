@@ -4,6 +4,7 @@ import {splitOn} from '../../common/array';
 
 export class Day13 {
     reader: LinesReader;
+    lines: Packet[] = [];
     pairs: [Packet, Packet][] = [];
 
     constructor(inputFile: string) {
@@ -35,9 +36,27 @@ export class Day13 {
 
     doPart2(): number {
         /*
-            DESCRIPTION
+            Add the two divider packets, [[2]] & [[6]]. Then organize all of the packets into the correct order.
+            What is the decoder key for the distress signal?
         */
-        return 0;
+
+        // Add the divider packets
+        const separator1 = '[[2]]';
+        const separator2 = '[[6]]';
+        this.lines.push(JSON.parse(separator1));
+        this.lines.push(JSON.parse(separator2));
+
+        // Now use our comparison function to sort them
+        const sorted = this.lines.sort(comparePackets);
+        // Find the 2 divider packets
+        const index1 = 1 + this.lines.findIndex(packet => {
+            // packet === JSON.parse('[[2]]');
+            return JSON.stringify(packet) === separator1;
+        });
+        const index2 = 1 + this.lines.findIndex(packet => {
+            return JSON.stringify(packet) === separator2;
+        });
+        return index1 * index2;
     }
 
     parseInput(): void {
@@ -45,6 +64,7 @@ export class Day13 {
         const lines = this.reader.lines.map(line => (line === '' ? '' : JSON.parse(line)));
         // reshape lines into pairs by splitting on blank lines to get an array of tuples '[Packet, Packet]'
         this.pairs = splitOn(lines, line => line === '') as [Packet, Packet][];
+        this.lines = lines.filter(line => line !== '') as Packet[];
     }
 
 }

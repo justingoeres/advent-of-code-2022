@@ -34,7 +34,7 @@ export const comparePackets = (packet1: Packet, packet2: Packet): ComparisonResu
      */
 
     // Ref: https://github.com/rogisolorzano/aoc-2022-ts/blob/main/src/day-13/index.ts
-    
+
     // Combine (zip) the left & right halves of the packet and iterate over them as tuples
     for (const [left, right] of zip(packet1, packet2)) {
         // console.log('Comparing...\n' + typeof left + ': ' + left + '\n' + typeof right + ': ' + right);
