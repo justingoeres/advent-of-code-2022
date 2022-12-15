@@ -1,6 +1,6 @@
 import {Op, OpCodeEnum} from './Op';
 import {InputReader} from '../../common/reader/InputReader';
-import {CPU} from './CPU';
+import {CPU, Pixel} from './CPU';
 import {sumReduce} from '../../common/Utils';
 
 export class Day10 {
@@ -20,8 +20,9 @@ export class Day10 {
         this.reader.input.forEach((op: Op) => {
             this.cpu.execute(op);
         });
-        // Output for Part 2
-        console.log(this.cpu.output.match(/[.#]{40}/g));
+        // Output for Part 2; line length is 80 because emojis are two bytes instead of one
+        const outputLines: RegExp = new RegExp('[' + Pixel.OFF + Pixel.ON + ']{80}', 'g');
+        console.log(this.cpu.output.match(outputLines));
         // Answer for Part 1
         return this.cpu.samples.reduce(sumReduce);
     }

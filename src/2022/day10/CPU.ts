@@ -54,7 +54,7 @@ export class CPU {
     };
 }
 
-enum Pixel {
-    OFF = '.',
-    ON = '#'
+export enum Pixel {
+    OFF = '⬛️',
+    ON = '⬜️'
 }
